@@ -1,0 +1,38 @@
+// Tailscale ACL / grants for Sara AI. Paste into the tailnet ACL editor.
+// Only named users reach the Open WebUI node. Do NOT expose Tabby
+// (:8001 / LLM_LAN_IP) and do NOT advertise the LLM LAN as a subnet route.
+//
+// Tag the Mac / always-on box: `tag:sara-ai`.
+// Extra users are ordinary tailnet users (or a group), not admins.
+
+{
+	"tagOwners": {
+		"tag:sara-ai": ["autogroup:admin"],
+	},
+
+	// Replace emails with the real household tailnet logins.
+	"groups": {
+		"group:users": [
+			"admin@example.com",
+			"user1@example.com",
+			"user2@example.com",
+			"user3@example.com",
+		],
+	},
+
+	"grants": [
+		{
+			"src": ["group:users"],
+			"dst": ["tag:sara-ai"],
+			"ip":  ["443"],
+		},
+	],
+
+	// No autogroup:internet / *:* for non-admin users.
+	// No wide subnet routes. Open WebUI on the Mac reaches Tabby
+	// over the LAN (LLM_LAN_IP:8001). Phones never need a path to Spark.
+	//
+	// Optional Magicsock: if the Open WebUI host is off that LAN, approve a
+	// subnet/exit for tag:sara-ai only (the UI box), never for
+	// group:users phones. Do not auto-approve the LLM LAN for members.
+}

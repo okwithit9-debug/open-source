@@ -1,0 +1,15 @@
+.env
+*.env
+!.env.example
+data/
+*.log
+.DS_Store
+cloudflare/credentials.json
+cloudflare/*.json
+!cloudflare/*.example.json
+tailscale/state/
+open-webui-data/
+image-gen/.env
+image-gen/workflows/current.json
+image-gen/models/
+image-gen/output/

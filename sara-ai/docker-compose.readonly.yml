@@ -1,0 +1,14 @@
+# Optional overlay — read-only rootfs where practical.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.readonly.yml up -d
+#
+# Open WebUI still needs a writable data volume (chats) and /tmp (caches).
+# If the container exits on start, drop this file and use docker-compose.yml
+# alone. Does not touch Tabby / Hermes / 27B.
+
+services:
+  open-webui:
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp

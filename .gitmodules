@@ -1,0 +1,6 @@
+[submodule "the-posting-tool"]
+	path = the-posting-tool
+	url = https://github.com/okwithit9-debug/the-posting-tool.git
+[submodule "open-source-clipper"]
+	path = open-source-clipper
+	url = https://github.com/okwithit9-debug/open-source-clipper.git

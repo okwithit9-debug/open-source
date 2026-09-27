@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.example.chat.comfyui</string>
+	<key>Comment</key>
+	<string>Mac ComfyUI for Sara AI Open WebUI. Not Tabby. Not Hermes. Not 27B.</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>COMFYUI_START_SH</string>
+	</array>
+	<key>WorkingDirectory</key>
+	<string>COMFYUI_WORKDIR</string>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>KeepAlive</key>
+	<false/>
+	<key>StandardOutPath</key>
+	<string>COMFYUI_LOG_OUT</string>
+	<key>StandardErrorPath</key>
+	<string>COMFYUI_LOG_ERR</string>
+</dict>
+</plist>

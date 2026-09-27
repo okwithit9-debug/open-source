@@ -1,0 +1,22 @@
+# DO NOT enable this unit on Spark while Tabby EXL3 is serving :8001.
+# Measured 2026-09-17: Tabby ~69.2 GiB, MemAvailable ~6.9 GiB.
+# FLUX.1-dev FP8 peaks ~12–16 GiB. Co-resident = OOM/hang (UMA, no graceful OOM).
+# Nunchaku does not fix that math. Do not unload EXL3 to make room.
+#
+# This template is only for a spare x86/ARM box that is NOT the Spark
+# and is NOT running Tabby. Default recommendation: Mac launchd / start.sh.
+
+[Unit]
+Description=Sara AI ComfyUI (NOT for Spark + Tabby)
+After=network.target
+
+[Service]
+Type=simple
+User=REPLACE_USER
+WorkingDirectory=/opt/sara-ai/image-gen
+ExecStart=/opt/sara-ai/image-gen/start.sh
+Restart=on-failure
+# Localhost only is enforced by start.sh.
+
+[Install]
+WantedBy=multi-user.target

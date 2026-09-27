@@ -1,0 +1,179 @@
+# Sara AI — Open WebUI in front of the already-live Spark Tabby.
+#
+#   cp .env.example .env    # then fill WEBUI_SECRET_KEY (and optional tunnel bits)
+#   docker compose up -d
+#
+# Proxies to Tabby OpenAI-compatible API at OPENAI_API_BASE_URL (default
+# http://host.docker.internal:8001/v1). Does not start, stop, rebuild, or reconfigure
+# Tabby, the agent runtime, Tabby weights, EXO, or Mac oMLX 27B on :8000.
+#
+# Bind is localhost only. Put Tailscale Serve or Cloudflare Tunnel + Access
+# in front — never a raw public port on Tabby or on this UI.
+# Image gen: Mac ComfyUI at COMFYUI_BASE_URL (default host.docker.internal:8188).
+# Do not run FLUX on Spark next to Tabby (~6.9 GiB free vs 12–16 GiB FP8).
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.11.3
+    container_name: sara-ai
+    restart: unless-stopped
+    ports:
+      - "${WEBUI_BIND:-127.0.0.1}:${WEBUI_PORT:-8080}:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # --- Tabby (Spark LAN). Chat-only. Not the Mac 27B backup. ---
+      ENABLE_OPENAI_API: "true"
+      OPENAI_API_BASE_URL: ${OPENAI_API_BASE_URL:-http://host.docker.internal:8001/v1}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-local-placeholder}
+      DEFAULT_MODELS: ${DEFAULT_MODELS:-Qwen3.8-Flash-Next-Uncensored-exl3-4bpw}
+      DEFAULT_PINNED_MODELS: ${DEFAULT_MODELS:-Qwen3.8-Flash-Next-Uncensored-exl3-4bpw}
+
+      # No second backend. Do not add Ollama / :8000 / Hermes here.
+      ENABLE_OLLAMA_API: "false"
+
+      WEBUI_NAME: ${WEBUI_NAME:-Sara AI}
+      WEBUI_URL: ${WEBUI_URL:-http://127.0.0.1:8080}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY:-change-me-before-phones}
+      WEBUI_AUTH: "true"
+      ENABLE_SIGNUP: ${ENABLE_SIGNUP:-true}
+      ENABLE_SIGNUP_PASSWORD_CONFIRMATION: "true"
+      ENABLE_LOGIN_FORM: "true"
+      ENABLE_PASSWORD_AUTH: "true"
+      ENABLE_PASSWORD_VALIDATION: "true"
+      DEFAULT_USER_ROLE: user
+      WEBUI_ADMIN_EMAIL: ${WEBUI_ADMIN_EMAIL:-}
+      WEBUI_ADMIN_PASSWORD: ${WEBUI_ADMIN_PASSWORD:-}
+      WEBUI_ADMIN_NAME: ${WEBUI_ADMIN_NAME:-Admin}
+
+      # Sessions. Flip cookie Secure to true in .env after HTTPS is up.
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      WEBUI_SESSION_COOKIE_SECURE: ${WEBUI_SESSION_COOKIE_SECURE:-false}
+      WEBUI_AUTH_COOKIE_SECURE: ${WEBUI_AUTH_COOKIE_SECURE:-false}
+      WEBUI_SESSION_COOKIE_SAME_SITE: ${WEBUI_SESSION_COOKIE_SAME_SITE:-strict}
+      WEBUI_AUTH_COOKIE_SAME_SITE: ${WEBUI_AUTH_COOKIE_SAME_SITE:-strict}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-http://127.0.0.1:8080}
+
+      # Chat + vision upload + local ComfyUI generate. No tools/agents/search.
+      ENABLE_DIRECT_CONNECTIONS: "false"
+      ENABLE_CODE_EXECUTION: "false"
+      ENABLE_CODE_INTERPRETER: "false"
+      ENABLE_WEB_SEARCH: "false"
+      ENABLE_IMAGE_GENERATION: ${ENABLE_IMAGE_GENERATION:-true}
+      ENABLE_IMAGE_PROMPT_GENERATION: ${ENABLE_IMAGE_PROMPT_GENERATION:-true}
+      ENABLE_IMAGE_EDIT: "false"
+      IMAGE_GENERATION_ENGINE: ${IMAGE_GENERATION_ENGINE:-comfyui}
+      IMAGE_SIZE: ${IMAGE_SIZE:-1024x1024}
+      IMAGE_STEPS: ${IMAGE_STEPS:-20}
+      COMFYUI_BASE_URL: ${COMFYUI_BASE_URL:-http://host.docker.internal:8188}
+      COMFYUI_API_KEY: ${COMFYUI_API_KEY:-}
+      COMFYUI_WORKFLOW_NODES: '${COMFYUI_WORKFLOW_NODES:-[{"type":"prompt","key":"text","node_ids":["6"]},{"type":"width","key":"width","node_ids":["5"]},{"type":"height","key":"height","node_ids":["5"]},{"type":"steps","key":"steps","node_ids":["3"]},{"type":"seed","key":"seed","node_ids":["3"]}]}'
+      ENABLE_COMMUNITY_SHARING: "false"
+      ENABLE_EVALUATION_ARENA_MODELS: "false"
+      ENABLE_MESSAGE_RATING: "false"
+      ENABLE_API_KEYS: "false"
+      ENABLE_CHANNELS: "false"
+      ENABLE_USER_WEBHOOKS: "false"
+      ENABLE_MEMORIES: "false"
+      ENABLE_ADMIN_ANALYTICS: "false"
+      ENABLE_VERSION_UPDATE_CHECK: "false"
+      ENABLE_PUBLIC_ACTIVE_USERS_COUNT: "false"
+      SHOW_ADMIN_DETAILS: "false"
+      SAFE_MODE: "true"
+      OFFLINE_MODE: "true"
+      HF_HUB_OFFLINE: "1"
+
+      USER_PERMISSIONS_CHAT_FILE_UPLOAD: "true"
+      USER_PERMISSIONS_CHAT_WEB_UPLOAD: "false"
+      USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "false"
+      USER_PERMISSIONS_FEATURES_WEB_SEARCH: "false"
+      USER_PERMISSIONS_FEATURES_IMAGE_GENERATION: "true"
+      USER_PERMISSIONS_FEATURES_CODE_INTERPRETER: "false"
+      USER_PERMISSIONS_FEATURES_API_KEYS: "false"
+      USER_PERMISSIONS_FEATURES_CHANNELS: "false"
+      USER_PERMISSIONS_FEATURES_MEMORIES: "false"
+      USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS: "false"
+      USER_PERMISSIONS_WORKSPACE_SKILLS_ACCESS: "false"
+      USER_PERMISSIONS_WORKSPACE_TOOLS_ALLOW_SHARING: "false"
+      USER_PERMISSIONS_WORKSPACE_SKILLS_ALLOW_SHARING: "false"
+
+      # Vision uploads stay local (Tabby). Bound size + image types.
+      RAG_FILE_MAX_SIZE: ${RAG_FILE_MAX_SIZE:-8}
+      RAG_FILE_MAX_COUNT: ${RAG_FILE_MAX_COUNT:-4}
+      RAG_ALLOWED_FILE_EXTENSIONS: ${RAG_ALLOWED_FILE_EXTENSIONS:-jpg,jpeg,png,webp}
+    volumes:
+      - open-webui-data:/app/backend/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # read_only rootfs is not practical here: Open WebUI writes caches under the
+    # image. Durable chats live on the named volume (see README Security).
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # Optional. Prefer host `tailscale serve` on the Mac (see tailscale/serve.sh).
+  # Use this profile on a headless always-on box that is not already on the tailnet.
+  # Shares Open WebUI's netns so Serve can proxy http://127.0.0.1:8080.
+  tailscale:
+    image: tailscale/tailscale:v1.84.2
+    container_name: sara-ai-tailscale
+    profiles: ["tailscale"]
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY:-}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_HOSTNAME: ${TS_HOSTNAME:-sara-ai}
+      TS_SERVE_CONFIG: /config/serve.json
+      TS_USERSPACE: "true"
+    volumes:
+      - tailscale-state:/var/lib/tailscale
+      - ./tailscale/serve.json.example:/config/serve.json:ro
+    depends_on:
+      - open-webui
+    network_mode: service:open-webui
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  # Optional. Create a tunnel in Cloudflare Zero Trust, then:
+  #   docker compose --profile cloudflare up -d
+  # Dashboard public hostname → http://open-webui:8080 (same compose network).
+  # Require a Cloudflare Access allowlist — do not leave the hostname open.
+  cloudflared:
+    image: cloudflare/cloudflared:2025.8.1
+    container_name: sara-ai-cloudflared
+    profiles: ["cloudflare"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    depends_on:
+      - open-webui
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  open-webui-data:
+  tailscale-state:

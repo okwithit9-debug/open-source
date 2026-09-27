@@ -1,0 +1,20 @@
+# Cloudflare Tunnel in front of Open WebUI. Never point a tunnel at Tabby :8001.
+# Access allowlist is mandatory — see access-policy.md. Do not leave this hostname open.
+#
+# Host cloudflared (Mac / always-on box), Open WebUI bound to 127.0.0.1:8080:
+#   tunnel: <tunnel-id-from-cloudflare>
+#   credentials-file: /etc/cloudflared/credentials.json
+#
+# Compose sidecar (`docker compose --profile cloudflare`): prefer a tunnel
+# token in .env (CLOUDFLARE_TUNNEL_TOKEN) and set the public hostname's
+# service in the Zero Trust dashboard to http://open-webui:8080.
+#
+# Copy to config.yml locally. Do not commit credentials.json.
+
+tunnel: REPLACE_TUNNEL_ID
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: chat.example.com
+    service: http://127.0.0.1:8080
+  - service: http_status:404
