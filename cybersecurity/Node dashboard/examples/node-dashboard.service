@@ -1,0 +1,21 @@
+# Example systemd *user* unit (for running the dashboard on a Linux box instead of a Mac;
+# the Mac-local security checks are simply skipped there).
+#   mkdir -p ~/.config/systemd/user
+#   cp examples/node-dashboard.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now node-dashboard
+#   journalctl --user -u node-dashboard -f
+[Unit]
+Description=Node dashboard (read-only cluster + security monitor)
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/node-dashboard
+ExecStart=/usr/bin/python3 %h/node-dashboard/server.py
+Environment=NODE_DASH_BIND=127.0.0.1
+Environment=NODE_DASH_PORT=8095
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

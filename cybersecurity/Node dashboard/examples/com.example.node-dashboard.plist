@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Example LaunchAgent. Replace /Users/YOURNAME/node-dashboard with the folder that
+  holds server.py, then:
+    cp examples/com.example.node-dashboard.plist ~/Library/LaunchAgents/
+    launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.example.node-dashboard.plist
+  Stop:
+    launchctl bootout "gui/$(id -u)/com.example.node-dashboard"
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.example.node-dashboard</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/YOURNAME/node-dashboard/server.py</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/YOURNAME/node-dashboard</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/YOURNAME/Library/Logs/node-dashboard.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/YOURNAME/Library/Logs/node-dashboard.err</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>NODE_DASH_BIND</key>
+    <string>127.0.0.1</string>
+    <key>NODE_DASH_PORT</key>
+    <string>8095</string>
+  </dict>
+</dict>
+</plist>

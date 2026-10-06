@@ -1,0 +1,16 @@
+# Example ~/.ssh/config entries on the Mac. The dashboard runs `ssh node1 bash -s`
+# with BatchMode=yes, so key-based login must already work without a prompt.
+Host node1
+    HostName 192.168.1.10
+    User youruser
+    IdentityFile ~/.ssh/id_ed25519
+
+Host node2
+    HostName 192.168.1.11
+    User youruser
+    IdentityFile ~/.ssh/id_ed25519
+
+Host node3
+    HostName 192.168.1.12
+    User youruser
+    IdentityFile ~/.ssh/id_ed25519

@@ -2,7 +2,7 @@
 
 Free, open-source software under the [MIT License](LICENSE).
 
-This repository is the public umbrella for three projects. Sara AI lives in this tree. The Posting Tool and Open Source Clipper are git submodules, each pinned to a commit on its default branch.
+This repository is the public umbrella for four projects. Sara AI and Node dashboard live in this tree. The Posting Tool and Open Source Clipper are git submodules, each pinned to a commit on its default branch.
 
 ## Projects
 
@@ -11,6 +11,7 @@ This repository is the public umbrella for three projects. Sara AI lives in this
 | The Posting Tool | Free, open-source social scheduling for short-form video. | [`the-posting-tool/`](the-posting-tool/) |
 | Open Source Clipper | Open-source video clipping tool that turns a long video into short captioned clips. | [`open-source-clipper/`](open-source-clipper/) |
 | Sara AI | Open-source home AI node: local LLM chat and ComfyUI images behind Open WebUI. | [`sara-ai/`](sara-ai/) |
+| Node dashboard | Read-only live dashboard for a Mac + Linux/DGX GPU nodes over SSH, with a monitor-only security section. | [`cybersecurity/Node dashboard/`](cybersecurity/Node%20dashboard/) |
 
 ## Clone
 

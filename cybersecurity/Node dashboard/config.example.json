@@ -1,0 +1,84 @@
+{
+  "title": "GPU Node Cluster",
+  "bind": "127.0.0.1",
+  "port": 8095,
+  "poll_secs": 3.5,
+  "ssh_timeout": 4,
+
+  "local": {
+    "label": "Mac",
+    "expected_ports": { "49152": "rapportd (Apple Continuity)" }
+  },
+
+  "nodes": [
+    {
+      "id": "node1",
+      "label": "Node 1",
+      "ssh": "node1",
+      "lan": "192.168.1.10",
+      "iface_labels": {
+        "enP7s7": "LAN (wired)",
+        "wlP9s9": "LAN Wi-Fi",
+        "enp1s0f0np0": "Fabric -> Node 2",
+        "enp1s0f1np1": "Fabric -> Node 3"
+      },
+      "expected_ports": { "22": "sshd", "8888": "LLM API" }
+    },
+    {
+      "id": "node2",
+      "label": "Node 2",
+      "ssh": "node2",
+      "ssh_hostname": "192.168.1.11",
+      "lan": "192.168.1.11",
+      "iface_labels": {
+        "enP7s7": "LAN (wired)",
+        "enp1s0f0np0": "Fabric -> Node 3",
+        "enp1s0f1np1": "Fabric -> Node 1"
+      },
+      "expected_ports": { "22": "sshd", "3389": "RDP" }
+    },
+    {
+      "id": "node3",
+      "label": "Node 3",
+      "ssh": "node3",
+      "lan": "192.168.1.12",
+      "iface_labels": {
+        "enP7s7": "LAN (wired)",
+        "enp1s0f0np0": "Fabric -> Node 2",
+        "enp1s0f1np1": "Fabric -> Node 1"
+      },
+      "expected_ports": { "22": "sshd" }
+    }
+  ],
+
+  "inference": {
+    "enabled": false,
+    "label": "Local LLM endpoint",
+    "base_url": "http://127.0.0.1:8888",
+    "health_path": "/health",
+    "models_path": "/v1/models",
+    "container": "llm-server",
+    "container_prefix": "llm"
+  },
+
+  "local_model": {
+    "enabled": false,
+    "label": "Local fallback model",
+    "base_url": "http://127.0.0.1:8000",
+    "launchd_label": "",
+    "log_path": ""
+  },
+
+  "security": {
+    "lan_labels": {
+      "192.168.1.1": "router",
+      "192.168.1.10": "Node 1",
+      "192.168.1.11": "Node 2",
+      "192.168.1.12": "Node 3",
+      "192.168.1.20": "Mac"
+    },
+    "home_ipv6_prefixes": ["fd00:1234:5678::/48"],
+    "port_names": { "8080": "web UI" },
+    "tunnel": null
+  }
+}
