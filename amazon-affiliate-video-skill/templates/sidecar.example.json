@@ -1,0 +1,34 @@
+{
+  "stem": "2026-01-01_brand-product_yapper_001",
+  "file": "2026-01-01_brand-product_yapper_001.mp4",
+  "product": {
+    "slug": "brand-product",
+    "asin": "B0XXXXXXXX",
+    "name": "Brand Product Name"
+  },
+  "kind": "yapper",
+  "persona_stitch": false,
+  "beats": [],
+  "hook_family": "problem",
+  "affiliate_url": "https://www.amazon.com/dp/B0XXXXXXXX?tag=YOUR_TAG-20",
+  "link_status": "VERIFIED",
+  "asin_live_proof": "2026-01-01 amazon.com: title matches, in stock",
+  "duration_sec": 15,
+  "aspect": "9:16",
+  "resolution": "720x1280",
+  "qc": "PASS",
+  "media_qc": {
+    "status": "PASS",
+    "reviewer": "YOUR_NAME",
+    "at": "2026-01-01T10:00:00-08:00",
+    "notes": "single pack, label readable, 2 hands, no model text, #ad burned in"
+  },
+  "disclosure": "#ad · As an Amazon Associate I earn from qualifying purchases.",
+  "captions": {
+    "x": {"caption": "#ad Your hook. Brand Product Name - one benefit.\nFind it on Amazon: https://www.amazon.com/dp/B0XXXXXXXX?tag=YOUR_TAG-20"},
+    "threads": {"caption": "Your hook.\nBrand Product Name - one benefit. Find it on Amazon.\n#ad · As an Amazon Associate I earn from qualifying purchases.\nhttps://www.amazon.com/dp/B0XXXXXXXX?tag=YOUR_TAG-20"},
+    "pinterest": {"title": "Problem keywords - Brand Product Name", "description": "One benefit. Find it on Amazon. #ad · As an Amazon Associate I earn from qualifying purchases.", "link": "https://www.amazon.com/dp/B0XXXXXXXX?tag=YOUR_TAG-20"},
+    "instagram": {"caption": "#ad Your hook.\nBrand Product Name - one benefit.\nLink in bio (YOUR_HANDLE). As an Amazon Associate I earn from qualifying purchases."},
+    "tiktok": {"caption": "#ad Your hook.\nBrand Product Name - one benefit.\nLink in bio (YOUR_HANDLE). As an Amazon Associate I earn from qualifying purchases."}
+  }
+}
